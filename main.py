@@ -15,25 +15,42 @@ def is_prime(n: int) -> bool:
 
 
 def decompose(n: int) -> dict[int, int]:
-    if n < 0:
-        raise ValueError
+    def aux(n: int, start: int, carry: dict[int, int]) -> dict[int, int]:
+        def insert(dict: dict[int, int], i: int) -> dict[int, int]:
+            j = dict.get(i, 0) + 1
+            dict[i] = j
+            return dict
 
-    def aux(i: int) -> dict[int, int]:
-        di = decompose(int(n / i))
-        j = di.get(i, 0) + 1
-        di[i] = j
-        return di
+        if n < 0:
+            return aux(-n, 2, {-1: 1})
 
-    if n % 2 == 0:
-        return aux(2)
-    for i in [2] + list(range(3, int(pow(n, 0.5)) + 1, 2)):
-        if n % i == 0:
-            return aux(i)
-    return {n: 1}
+        if n == 0:
+            return {0: 1}
+
+        if n == 1:
+            if carry:
+                return carry
+            else:
+                return {1: 1}
+
+        if start == 2 and n % 2 == 0:
+            return aux(int(n / 2), 2, insert(carry, 2))
+        for i in range(3, int(pow(n, 0.5)) + 1, 2):
+            if n % i == 0:
+                return aux(int(n / i), i, insert(carry, i))
+        return insert(carry, n)
+
+    return aux(n, 2, {})
 
 
 def main() -> None:
-    print(decompose(7 * 7 * 2 * 2 * 2 * 5 * 9))
+    print(decompose(-7 * 7 * 2 * 2 * 2 * 5 * 9))
+    print(decompose(2 * 2 * 5 * 9))
+    print(decompose(0))
+    print(decompose(1))
+    print(decompose(-1))
+    print(decompose(2))
+    print(decompose(7))
 
 
 if __name__ == "__main__":
