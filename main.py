@@ -6,16 +6,21 @@ def is_prime(x: int) -> bool:
         return False
     if x == 2:
         return True
-    for i in range(3, x - 1):
+    if x % 2 == 0:
+        return False
+    for i in range(3, int(pow(x, 0.5)) + 1, 2):
         if x % i == 0:
             return False
     return True
 
 
 def main() -> None:
+    count = 0
     for i in range(1, 100):
         if is_prime(i):
             print(i)
+            count += 1
+    print("Count:", count)
 
 
 if __name__ == "__main__":
