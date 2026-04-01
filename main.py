@@ -12,7 +12,7 @@ def mod(x, n):
 
 
 # Prime function
-def prime(x):
+def is_prime(x):
     if not isinstance(x, int):
         raise ValueError("Must be an integer")
     if x < 2:
