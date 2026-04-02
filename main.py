@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-from math import isqrt
-
 
 def is_prime(n: int) -> bool:
     """Check if an integer is prime."""
@@ -11,43 +9,49 @@ def is_prime(n: int) -> bool:
         return True
     if n % 2 == 0:
         return False
-    for i in range(3, int(pow(n, 0.5)) + 1, 2):
-        if n % i == 0:
+    d = 3
+    # No need to check beyond sqrt(n):
+    # if n = a * b, one factor ≤ sqrt(n)
+    while d * d <= n:
+        if n % d == 0:
             return False
+        d += 2
     return True
 
 
 def decompose(n: int) -> dict[int, int]:
     """Decompose an integer."""
 
-    def aux(n: int, start: int, carry: dict[int, int]) -> dict[int, int]:
-        def insert(dict: dict[int, int], i: int) -> dict[int, int]:
-            j = dict.get(i, 0) + 1
-            dict[i] = j
-            return dict
+    def insert(i: int) -> None:
+        out[i] = out.get(i, 0) + 1
 
-        if n < 0:
-            return aux(-n, 2, {-1: 1})
+    out: dict[int, int] = {}
+    if n == 0:
+        return {0: 1}
+    if n == 1:
+        # We do this for readability, returning {} is more common here
+        return {1: 1}
+    if n < 0:
+        insert(-1)
+        n = -n
 
-        if n == 0:
-            return {0: 1}
+    while n % 2 == 0:
+        insert(2)
+        n //= 2
 
-        if n == 1:
-            if carry:
-                return carry
-            else:
-                return {1: 1}
+    d = 3
+    while d * d <= n:
+        # At this point, n has no prime factors < d
+        while n % d == 0:
+            insert(d)
+            n //= d
+        d += 2
 
-        if start == 2 and n % 2 == 0:
-            return aux(n // 2, 2, insert(carry, 2))
-        if start == 2:
-            start = 3
-        for i in range(start, isqrt(n) + 1, 2):
-            if n % i == 0:
-                return aux(n // i, i, insert(carry, i))
-        return insert(carry, n)
+    # If remainder is prime
+    if n > 1:
+        insert(n)
 
-    return aux(n, 2, {})
+    return out
 
 
 def main() -> None:
@@ -59,6 +63,7 @@ def main() -> None:
     print(decompose(-1))
     print(decompose(2))
     print(decompose(7))
+    print(list(filter(is_prime, range(100))))
 
 
 if __name__ == "__main__":
