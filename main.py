@@ -54,16 +54,49 @@ def decompose(n: int) -> dict[int, int]:
     return out
 
 
+def legendre(m: int, n: int) -> int:
+    """Calculate the Legendre symbol (m/n)"""
+    m = m % n
+    if m == 0:
+        return 0
+    if n == 2:
+        return 1
+    if not is_prime(n):
+        raise Exception("q needs to be a prime.")
+    if m == 1:
+        return 1
+    if m == 2:
+        res = n % 8
+        if res == 1 or res == 7:
+            return 1
+        else:
+            return -1
+    factors = decompose(m)
+    out = 1
+    for p in factors:
+        if n < p or p == 2:
+            out *= legendre(p, n) ** factors[p]
+        else:
+            res1 = p % 4
+            res2 = n % 4
+            if res1 == 1 or res2 == 1:
+                mult = 1
+            else:
+                mult = -1
+            out *= (legendre(n, p) * int(mult)) ** factors[p]
+    return out
+
+
 def main() -> None:
     """Main function, mostly for testing."""
-    print(decompose(-7 * 7 * 2 * 2 * 2 * 5 * 9))
-    print(decompose(2 * 2 * 5 * 9))
-    print(decompose(0))
-    print(decompose(1))
-    print(decompose(-1))
-    print(decompose(2))
-    print(decompose(7))
-    print(list(filter(is_prime, range(100))))
+    print(legendre(83, 103), 1)
+    print(legendre(17, 19), 1)
+    print(legendre(-2, 19), 1)
+    print(legendre(5, 7), -1)
+    print(legendre(18, 3), 0)
+    print(legendre(19, 3), 1)
+    print(legendre(17, 3), -1)
+    print(legendre(19, 13), -1)
 
 
 if __name__ == "__main__":
