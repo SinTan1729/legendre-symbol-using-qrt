@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import json
+
 
 def is_prime(n: int) -> bool:
     """Check if an integer is prime."""
@@ -59,10 +61,8 @@ def legendre(m: int, n: int) -> int:
     m = m % n
     if m == 0:
         return 0
-    if n == 2:
-        return 1
-    if not is_prime(n):
-        raise Exception("q needs to be a prime.")
+    if n == 2 or not is_prime(n):
+        raise Exception("q needs to be an odd prime.")
     if m == 1:
         return 1
     if m == 2:
@@ -89,14 +89,14 @@ def legendre(m: int, n: int) -> int:
 
 def main() -> None:
     """Main function, mostly for testing."""
-    print(legendre(83, 103), 1)
-    print(legendre(17, 19), 1)
-    print(legendre(-2, 19), 1)
-    print(legendre(5, 7), -1)
-    print(legendre(18, 3), 0)
-    print(legendre(19, 3), 1)
-    print(legendre(17, 3), -1)
-    print(legendre(19, 13), -1)
+    with open("data.txt", "r") as f:
+        for line in f.readlines():
+            if line.startswith("#"):
+                continue
+            m, n, o = json.loads(line)
+            lg = legendre(m, n)
+            if lg != o:
+                raise Exception(f"(({m},{n}) = {lg}, but should be {lg}!)")
 
 
 if __name__ == "__main__":
