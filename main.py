@@ -88,7 +88,7 @@ def legendre(m: int, n: int) -> int:
 
 
 def main() -> None:
-    """Main function, mostly for testing."""
+    """Main function, used for testing."""
     with open("data.txt", "r") as f:
         for line in f.readlines():
             if line.startswith("#"):
@@ -97,6 +97,33 @@ def main() -> None:
             lg = legendre(m, n)
             if lg != o:
                 raise Exception(f"(({m},{n}) = {lg}, but should be {lg}!)")
+
+    prime_checks = [
+        [7, True],
+        [31, True],
+        [111, False],
+        [7919, True],
+        [10791, False],
+    ]
+    for p, b in prime_checks:
+        if is_prime(p) != b:
+            raise Exception(f"is_prime({p}) should not be {not b}!")
+
+    decompose_checks = [
+        [7, {7: 1}],
+        [8, {2: 3}],
+        [1, {1: 1}],
+        [-1, {-1: 1}],
+        [-18, {-1: 1, 2: 1, 3: 2}],
+        [60, {2: 2, 3: 1, 5: 1}],
+    ]
+    for n, d in decompose_checks:
+        assert isinstance(n, int)
+        dn = decompose(n)
+        if dn != d:
+            raise Exception(f"decompose({n}) = {d}, but found {dn}!")
+
+    print("All tests passed!")
 
 
 if __name__ == "__main__":
