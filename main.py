@@ -57,14 +57,15 @@ def decompose(n: int) -> dict[int, int]:
 
 
 def legendre(m: int, n: int) -> int:
-    """Calculate the Legendre symbol (m/n)"""
     m = m % n
+    # Takes care of the zero case
     if m == 0:
         return 0
     if n == 2 or not is_prime(n):
         raise Exception("q needs to be an odd prime.")
     if m == 1:
         return 1
+    # Speciel case for even prime
     if m == 2:
         res = n % 8
         if res == 1 or res == 7:
@@ -73,7 +74,9 @@ def legendre(m: int, n: int) -> int:
             return -1
     factors = decompose(m)
     out = 1
+    # Code that follows uses the quadratic reciprocity theorem
     for p in factors:
+         # No need to check if zero here, dealt with above
         if n < p or p == 2:
             out *= legendre(p, n) ** factors[p]
         else:
