@@ -1,4 +1,4 @@
-# Calculating Legendre symbol with the Quadratic Reciprocity Theorem
+# Calculating the Legendre symbol using the Quadratic Reciprocity Theorem
 
 This is part of a Directed Reading Program.
 The goal of this code is to make a function using the Quadratic Reciprocity Theorem
