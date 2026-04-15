@@ -63,6 +63,7 @@ def legendre(m: int, n: int) -> int:
         return 0
     if n == 2 or not is_prime(n):
         raise Exception("q needs to be an odd prime.")
+    # Speciel case for 1
     if m == 1:
         return 1
     # Speciel case for even prime
@@ -80,6 +81,7 @@ def legendre(m: int, n: int) -> int:
         if n < p or p == 2:
             out *= legendre(p, n) ** factors[p]
         else:
+         # If the conditions above are both false, then we can use QRT to flip the legendre symbol
             res1 = p % 4
             res2 = n % 4
             if res1 == 1 or res2 == 1:
