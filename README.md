@@ -5,6 +5,6 @@ The goal of this code is to make a function using the Quadratic Reciprocity Theo
 The QRT states that for a given Legendre symbol (q/p) where q and p are distinct
 primes: (q/p)=(p/q) except if q or p is congruent to 3 mod(4) then (q/p)=-(p/q). In other
 words, if q and p are distinct primes then we can flip the Legendre symbol, with the exception
-of 3 mod(4) where we can still flip it but need a negative sign in front.
+of 3 mod(4) where we can still flip it but will need to have a negative sign out infront of the legendre symbol.
 
 _This is part of a Directed Reading Program._
