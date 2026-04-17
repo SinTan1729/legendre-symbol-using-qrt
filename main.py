@@ -90,7 +90,18 @@ def legendre(m: int, n: int) -> int:
                 mult = -1
             out *= (legendre(n, p) * int(mult)) ** factors[p]
     return out
-
+    
+def quadratic_residue_primes (n: int, p: int) -> int:
+    if p <= 2:
+        raise Exception ("Modulus must be a prime larger then two")
+    n = n % p
+    if n == 0:
+        out = True
+    else:
+     # by Euler's criterion
+     out =  pow(n, (p-1)//2, p) == 1
+    return out
+    
 
 def main() -> None:
     """Main function, used for testing."""
