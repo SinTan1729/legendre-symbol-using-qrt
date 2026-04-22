@@ -101,7 +101,18 @@ def quadratic_residue_primes (n: int, p: int) -> int:
      # by Euler's criterion
      out =  pow(n, (p-1)//2, p) == 1
     return out
-    
+
+def quadratic_residue (a: int, n: int) -> int:
+    if n <= 1:
+        raise Exception (" n must be larger then 1")
+    if a == 0:
+        return True
+    if is_prime(n):
+        return quadratic_residue_primes(a,n)
+    for x in range(1,n):
+        if (x * x) % n == a:
+            return True
+    return False
 
 def main() -> None:
     """Main function, used for testing."""
