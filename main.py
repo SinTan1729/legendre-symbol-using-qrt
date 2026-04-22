@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+from sage.arith.misc import legendre_symbol
 import json
 
 
@@ -77,11 +78,11 @@ def legendre(m: int, n: int) -> int:
     out = 1
     # Code that follows uses the quadratic reciprocity theorem
     for p in factors:
-         # No need to check if zero here, dealt with above
+        # No need to check if zero here, dealt with above
         if n < p or p == 2:
             out *= legendre(p, n) ** factors[p]
         else:
-         # If the conditions above are both false, then we can use QRT to flip the legendre symbol
+            # If the conditions above are both false, then we can use QRT to flip the legendre symbol
             res1 = p % 4
             res2 = n % 4
             if res1 == 1 or res2 == 1:
@@ -90,29 +91,35 @@ def legendre(m: int, n: int) -> int:
                 mult = -1
             out *= (legendre(n, p) * int(mult)) ** factors[p]
     return out
-    
-def quadratic_residue_primes (n: int, p: int) -> int:
-    if p <= 2:
-        raise Exception ("Modulus must be a prime larger then two")
-    n = n % p
-    if n == 0:
-        out = True
-    else:
-     # by Euler's criterion
-     out =  pow(n, (p-1)//2, p) == 1
-    return out
 
-def quadratic_residue (a: int, n: int) -> int:
+
+def quadratic_residue_primes(n: int, p: int) -> int:
+    """Check if some integer is a quadratic residue modulo a prime"""
+    if p <= 2 or (not is_prime(p)):
+        raise Exception("Modulus must be a prime larger than two")
+    n = n % p
+    return n == 0 or legendre_symbol(n, p) == 1
+
+
+def quadratic_residue(a: int, n: int) -> int:
+    """Check if some integer is a quadratic residue modulo another integer"""
     if n <= 1:
-        raise Exception (" n must be larger then 1")
+        raise Exception(" n must be larger than 1")
+    a = a % n
     if a == 0:
         return True
-    if is_prime(n):
-        return quadratic_residue_primes(a,n)
-    for x in range(1,n):
-        if (x * x) % n == a:
-            return True
-    return False
+    dec = decompose(n)
+    for p in dec:
+        if p > 2 and (not quadratic_residue_primes(a, p)):
+            return False
+        if p == 2:
+            r = dec[p]
+            if r >= 3 and not (a % 8 == 1):
+                return False
+            if r >= 2 and not (a % 4 == 1):
+                return False
+    return True
+
 
 def main() -> None:
     """Main function, used for testing."""
@@ -149,6 +156,17 @@ def main() -> None:
         dn = decompose(n)
         if dn != d:
             raise Exception(f"decompose({n}) = {d}, but found {dn}!")
+
+    residue_tests = [
+        [17, 32, True],
+        [3, 16, False],
+        [73, 144, True],
+        [21, 144, False],
+        [5, 7, False],
+    ]
+    for a, n, b in residue_tests:
+        if quadratic_residue(a, n) != b:
+            raise Exception(f"Quadratic residue ({a},{n}) must be {b}.")
 
     print("All tests passed!")
 
